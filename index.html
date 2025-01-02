@@ -20,10 +20,11 @@
             height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: space-between; /* Ensures content is spaced out */
-            align-items: center;
+            justify-content: center; /* Vertically center the main content */
+            align-items: center; /* Horizontally center */
             overflow: hidden;
             padding: 0 20px;
+            position: relative;
         }
 
         h1 {
@@ -46,13 +47,17 @@
             margin-top: 30px;
         }
 
-        /* Loading section (p and loader centered at the bottom) */
+        /* Loading section (positioned at the bottom center) */
         .loading {
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-bottom: 20px; /* Add some space below the loader */
+            position: absolute;
+            bottom: 20px; /* Adjust bottom distance from the viewport */
+            left: 50%;
+            transform: translateX(-50%); /* Center horizontally */
             width: 100%;
+            text-align: center;
         }
 
         .loader-img {
@@ -130,7 +135,7 @@
             const appScheme = 'com.karamsawalha.arabicschools://arabicschooln/'+atob(getUrlParameter('i')); // App Scheme
             const appStoreURL = 'https://apps.apple.com/us/app/arabic-school-for-parents/id6466744621'; // App Store URL
             const playStoreURL = 'https://play.google.com/store/apps/details?id=com.karamsawalha.arabicschools'; // Play Store URL
-            const hold = getUrlParameter('h'); // Get 'hold' parameter from URL
+            const hold = getUrlParameter('hold'); // Get 'hold' parameter from URL
 
             document.getElementById('loading').style.display = 'block'; // Show loading animation
             openAppOrStore(appScheme, appStoreURL, playStoreURL, hold);
