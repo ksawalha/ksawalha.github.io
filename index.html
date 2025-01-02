@@ -33,12 +33,13 @@
             overflow: hidden;
         }
 
+        /* Image container: Take available height but avoid overflow */
         .image-container {
             background: url('https://personal-ms7xwb5h.outsystemscloud.com/arabicschool/img/arabicschool.loginbackground.jpg') no-repeat center center/cover;
             flex-grow: 1;
-            height: 0;
+            height: 50%; /* Adjust height to fit half of the screen */
             border-radius: 15px;
-            margin: 10px;
+            margin: 10px,0px,10px,0px;
         }
 
         .logo-container {
@@ -64,10 +65,12 @@
             height: 30px;
         }
 
+        /* Content: Take remaining space and make it scrollable if necessary */
         .content {
             padding: 20px;
             overflow-y: auto;
             flex-shrink: 0;
+            flex-grow: 0;
         }
 
         .title {
@@ -97,6 +100,10 @@
 
             .image-container {
                 height: 200px; /* Adjust for smaller screens */
+            }
+
+            .logo-container {
+                padding: 10px;
             }
         }
     </style>
