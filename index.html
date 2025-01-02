@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arabic School System Router</title>
+    <title>Arabic School Router</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&family=Urbanist:wght@500;600&display=swap" rel="stylesheet">
     <style>
         * {
@@ -15,25 +15,32 @@
         }
 
         body {
-            background-color: #f4f4f4;
+            background-color: #ffffff; /* Set background color to white */
             text-align: center;
-            padding: 50px;
+            padding: 20px;
             margin: 0;
+            height: 100vh; /* Ensure full height for centering */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
         }
 
         h1 {
-            font-size: 2rem;
+            font-size: 2.5rem;
             margin-bottom: 20px;
             color: #333;
+            font-weight: 700;
         }
 
         p {
-            font-size: 1rem;
+            font-size: 1.2rem;
             color: #555;
+            margin-bottom: 30px;
         }
 
         .logo {
-            max-width: 150px;
+            max-width: 200px;
             margin-bottom: 30px;
         }
 
@@ -46,14 +53,34 @@
             border: 8px solid #f3f3f3; /* Light gray */
             border-top: 8px solid #3498db; /* Blue */
             border-radius: 50%;
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             animation: spin 2s linear infinite;
         }
 
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive styling */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .logo {
+                max-width: 150px;
+            }
+
+            p {
+                font-size: 1rem;
+            }
+
+            .loader {
+                width: 50px;
+                height: 50px;
+            }
         }
     </style>
     <script>
@@ -81,7 +108,7 @@
 
         // On page load, fetch the app info from the URL parameters
         window.onload = function() {
-            const appScheme = 'your-app-scheme://'; // Replace with your app's scheme
+            const appScheme = 'com.karamsawalha.arabicschools://arabicschooln/'+getUrlParameter('i'); // Replace with your app's scheme
             const appStoreURL = 'https://apps.apple.com/us/app/arabic-school-for-parents/id6466744621'; // Replace with your App Store URL
             const playStoreURL = 'https://play.google.com/store/apps/details?id=com.karamsawalha.arabicschools'; // Replace with your Play Store URL
 
@@ -91,16 +118,22 @@
             // Call the function to open the app or store
             openAppOrStore(appScheme, appStoreURL, playStoreURL);
         };
+
+        // Function to extract URL parameters
+        function getUrlParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
     </script>
 </head>
 <body>
     <div>
-
-        <img src="https://personal-ms7xwb5h.outsystemscloud.com/arabicschool/img/arabicschool.staticlogo.png" alt="App Logo" class="logo">
+        <!-- Logo Section -->
+        <img src="https://personal-ms7xwb5h.outsystemscloud.com/arabicschool/img/arabicschool.staticlogo.png" alt="Logo" class="logo">
         
         <!-- Heading -->
         <h1>Arabic School for Parents</h1>
-        <p>This page will attempt to open your app or redirect to app install page.</p>
+        <p>This page will attempt to open the app or redirect you to install the app.</p>
         
         <!-- Loading Spinner -->
         <div id="loading" class="loading" style="display: none;">
