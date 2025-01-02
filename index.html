@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arabic School Router</title>
+    <title>Arabic School System Router</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&family=Urbanist:wght@500;600&display=swap" rel="stylesheet">
     <style>
         * {
@@ -46,16 +46,20 @@
 
         .loading {
             margin-top: 30px;
+            width: 100%;
+            text-align: center;
         }
 
         /* Loading cycle style */
         .loader {
             border: 8px solid #f3f3f3; /* Light gray */
-            border-top: 8px solid #3498db; /* Blue */
-            border-radius: 50%;
+            border-top: 8px solid #000000; /* Black color for the spinner */
+            border-radius: 50%; /* Round spinner */
             width: 60px;
             height: 60px;
             animation: spin 2s linear infinite;
+            margin: 0 auto; /* Center the loader */
+            border-radius: 10px; /* Ensure rounded corners for the loader */
         }
 
         @keyframes spin {
@@ -84,7 +88,13 @@
         }
     </style>
     <script>
-        function openAppOrStore(appScheme, appStoreURL, playStoreURL) {
+        function openAppOrStore(appScheme, appStoreURL, playStoreURL, hold) {
+            // If 'hold' parameter is 1, prevent redirection
+            if (hold === "1") {
+                document.getElementById('loading').style.display = 'block'; // Keep the loading visible
+                return; // Don't redirect
+            }
+
             // Create an invisible iframe to attempt to open the app
             var iframe = document.createElement("iframe");
             iframe.style.display = "none";
@@ -111,12 +121,13 @@
             const appScheme = 'com.karamsawalha.arabicschools://arabicschooln/'+getUrlParameter('i'); // Replace with your app's scheme
             const appStoreURL = 'https://apps.apple.com/us/app/arabic-school-for-parents/id6466744621'; // Replace with your App Store URL
             const playStoreURL = 'https://play.google.com/store/apps/details?id=com.karamsawalha.arabicschools'; // Replace with your Play Store URL
+            const hold = getUrlParameter('h'); // Get the 'hold' parameter value from the URL
 
             // Show the loading cycle
             document.getElementById('loading').style.display = 'block';
 
             // Call the function to open the app or store
-            openAppOrStore(appScheme, appStoreURL, playStoreURL);
+            openAppOrStore(appScheme, appStoreURL, playStoreURL, hold);
         };
 
         // Function to extract URL parameters
@@ -129,11 +140,11 @@
 <body>
     <div>
         <!-- Logo Section -->
-        <img src="https://personal-ms7xwb5h.outsystemscloud.com/arabicschool/img/arabicschool.staticlogo.png" alt="Logo" class="logo">
+        <img src="https://personal-ms7xwb5h.outsystemscloud.com/arabicschool/img/arabicschool.staticlogo.png" alt="App Logo" class="logo">
         
         <!-- Heading -->
         <h1>Arabic School for Parents</h1>
-        <p>This page will attempt to open the app or redirect you to install the app.</p>
+        <p>This page will attempt to open your app or redirect you to the app store to install the app if not found.</p>
         
         <!-- Loading Spinner -->
         <div id="loading" class="loading" style="display: none;">
