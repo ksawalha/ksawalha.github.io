@@ -12,19 +12,20 @@
             -moz-text-size-adjust: 100%;
             -ms-text-size-adjust: 100%;
             text-size-adjust: 100%;
+            margin: 0;
+            padding: 0;
         }
 
         body {
             background-color: #ffffff;
-            margin: 0;
             height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: center; /* Vertically center the main content */
-            align-items: center; /* Horizontally center */
+            justify-content: center; /* Vertically center content */
+            align-items: center; /* Horizontally center content */
             overflow: hidden;
-            padding: 0 20px;
             position: relative;
+            padding: 0 20px;
         }
 
         h1 {
@@ -43,26 +44,23 @@
         }
 
         .logo {
-            max-width: 200px;
+            max-width: 30px;
             margin-top: 30px;
+            text-align: center;
         }
 
         /* Loading section (positioned at the bottom center) */
         .loading {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
             position: absolute;
-            bottom: 20px; /* Adjust bottom distance from the viewport */
+            bottom: 20px; /* Adjust the space from the bottom */
             left: 50%;
-            transform: translateX(-50%); /* Center horizontally */
-            width: 100%;
+            transform: translateX(-50%);
             text-align: center;
+            width: 100%;
         }
 
         .loader-img {
-            max-width: 30px;
-            margin-top: 10px; /* Space between text and loader */
+            max-width: 200px;
         }
 
         @media (max-width: 600px) {
@@ -135,7 +133,7 @@
             const appScheme = 'com.karamsawalha.arabicschools://arabicschooln/'+atob(getUrlParameter('i')); // App Scheme
             const appStoreURL = 'https://apps.apple.com/us/app/arabic-school-for-parents/id6466744621'; // App Store URL
             const playStoreURL = 'https://play.google.com/store/apps/details?id=com.karamsawalha.arabicschools'; // Play Store URL
-            const hold = getUrlParameter('hold'); // Get 'hold' parameter from URL
+            const hold = getUrlParameter('h'); // Get 'hold' parameter from URL
 
             document.getElementById('loading').style.display = 'block'; // Show loading animation
             openAppOrStore(appScheme, appStoreURL, playStoreURL, hold);
