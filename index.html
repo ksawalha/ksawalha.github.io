@@ -1,83 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arabic School System Router</title>
+    <title>Arabic School Survey</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&family=Urbanist:wght@500;600&display=swap" rel="stylesheet">
     <style>
         * {
             font-family: 'Urbanist', 'Tajawal', sans-serif;
-            -webkit-text-size-adjust: 100%;
-            -moz-text-size-adjust: 100%;
-            -ms-text-size-adjust: 100%;
-            text-size-adjust: 100%;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
 
         body {
             background-color: #ffffff;
-            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align content to the top */
+            min-height: 100vh; /* Ensure the body takes full viewport height */
+            overflow: hidden; /* Prevent scrolling on the body */
+        }
+
+        .container {
             display: flex;
             flex-direction: column;
-            justify-content: center; /* Vertically center content */
-            align-items: center; /* Horizontally center content */
+            max-width: 600px;
+            width: 100%;
+            height: 100vh; /* Make sure container takes full viewport height */
+            border-radius: 10px;
             overflow: hidden;
-            position: relative;
-            padding: 0 20px;
         }
 
-        h1 {
-            font-size: 2rem;
-            color: #333;
-            font-weight: 700;
-            text-align: center;
-            margin-top: 20px;
+        .image-container {
+            background: url('https://personal-ms7xwb5h.outsystemscloud.com/arabicschool/img/arabicschool.loginbackground.jpg') no-repeat center center/cover;
+            flex-grow: 1; /* Allow image container to take remaining height */
+            height: 0; /* Set initial height to 0 and let flexbox handle it */
+            border-radius: 15px;
         }
 
-        p {
-            font-size: 1.2rem;
-            color: #555;
-            text-align: center;
-            margin-bottom: 10px;
+        .logo-container {
+            display: flex;
+            justify-content: flex-start; /* Align logo to the left */
+            align-items: center;
+            padding: 15px;
+            position: relative; /* Make it relative for absolute positioning */
         }
 
         .logo {
-            max-width: 30px;
-            margin-top: 30px;
-            text-align: center;
+            width: 80px;
         }
 
-        /* Loading section (positioned at the bottom center) */
         .loading {
-            position: absolute;
-            bottom: 20px; /* Adjust the space from the bottom */
-            left: 50%;
-            transform: translateX(-50%);
-            text-align: center;
-            width: 100%;
+            display: none; /* Hidden by default */
+            margin-left: auto; /* Push the spinner to the far right */
         }
 
         .loader-img {
-            max-width: 200px;
+            width: 30px;
+            height: 30px;
         }
 
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 1.6rem;
+        .content {
+            padding: 20px;
+            overflow-y: auto; /* Make content scrollable if necessary */
+            flex-shrink: 0; /* Prevent content from shrinking */
+            flex-grow: 0; /* Prevent content from growing */
+        }
+
+        .title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #444;
+            text-align: left;
+            margin-bottom: 10px;
+        }
+
+        .description {
+            font-size: 1rem;
+            color: #777;
+            line-height: 1.6;
+            text-align: justify;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .title {
+                font-size: 1.2rem;
             }
 
-            .logo {
-                max-width: 150px;
+            .description {
+                font-size: 0.9rem;
             }
 
-            p {
-                font-size: 1rem;
-            }
-
-            .loader-img {
-                max-width: 30px;
+            .image-container {
+                height: 200px; /* Adjust for smaller screens */
             }
         }
     </style>
@@ -130,7 +148,7 @@
         }
 
         window.onload = function() {
-            const appScheme = 'com.karamsawalha.arabicschools://arabicschooln/'+atob(getUrlParameter('i')); // App Scheme
+            const appScheme = 'com.karamsawalha.arabicschools://arabicschooln/' + atob(getUrlParameter('i')); // App Scheme
             const appStoreURL = 'https://apps.apple.com/us/app/arabic-school-for-parents/id6466744621'; // App Store URL
             const playStoreURL = 'https://play.google.com/store/apps/details?id=com.karamsawalha.arabicschools'; // Play Store URL
             const hold = getUrlParameter('h'); // Get 'hold' parameter from URL
@@ -146,19 +164,30 @@
         }
     </script>
 </head>
+
 <body>
-    <div>
-        <!-- Logo Section -->
-        <img src="https://personal-ms7xwb5h.outsystemscloud.com/arabicschool/img/arabicschool.staticlogo.png" alt="App Logo" class="logo">
+    <div class="container">
+        <!-- Logo -->
+        <div class="logo-container">
+            <img src="https://personal-ms7xwb5h.outsystemscloud.com/arabicschool/img/arabicschool.staticlogo.png" alt="School Logo" class="logo">
+            
+            <!-- Loading Spinner -->
+            <div id="loading" class="loading">
+                <img src="https://personal-ms7xwb5h.outsystemscloud.com/arabicschool/img/arabicschool.Rolling1s200px.svg" alt="Loading..." class="loader-img">
+            </div>
+        </div>
         
-        <!-- Heading -->
-        <h1>Arabic School for Parents</h1>
-        <p>This page will attempt to open your app or redirect you to the app store to install the app if not found.</p>
-        
-        <!-- Loading Spinner (Image-based) -->
-        <div id="loading" class="loading" style="display: none;">
-            <img src="https://personal-ms7xwb5h.outsystemscloud.com/arabicschool/img/arabicschool.Rolling1s200px.svg" alt="Loading..." class="loader-img">
+        <!-- Header Image -->
+        <div class="image-container"></div>
+
+        <!-- Content -->
+        <div class="content">
+            <h1 class="title">Arabic School for Parents</h1>
+            <p class="description">
+              This page will attempt to open your app or redirect you to the app store to install the app if not found.
+            </p>
         </div>
     </div>
 </body>
+
 </html>
