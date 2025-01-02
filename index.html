@@ -8,26 +8,27 @@
     <style>
         * {
             font-family: 'Urbanist', 'Tajawal', sans-serif;
-            -webkit-text-size-adjust: 100%; /* Prevent font scaling in Safari */
-            -moz-text-size-adjust: 100%; /* Prevent font scaling in Firefox */
-            -ms-text-size-adjust: 100%; /* Prevent font scaling in IE */
-            text-size-adjust: 100%; /* Prevent font scaling in other browsers */
+            -webkit-text-size-adjust: 100%;
+            -moz-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+            text-size-adjust: 100%;
         }
 
         body {
-            background-color: #ffffff; /* Set background color to white */
+            background-color: #ffffff;
             text-align: center;
             padding: 20px;
             margin: 0;
-            height: 100vh; /* Ensure full height for centering */
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
+            overflow: hidden; /* Prevent scrolling on small screens */
         }
 
         h1 {
-            font-size: 2.5rem;
+            font-size: 2rem; /* Slightly reduced font size for smaller screens */
             margin-bottom: 20px;
             color: #333;
             font-weight: 700;
@@ -50,27 +51,15 @@
             text-align: center;
         }
 
-        /* Loading cycle style */
-        .loader {
-            border: 8px solid #f3f3f3; /* Light gray */
-            border-top: 8px solid #000000; /* Black color for the spinner */
-            border-radius: 50%; /* Round spinner */
-            width: 60px;
-            height: 60px;
-            animation: spin 2s linear infinite;
-            margin: 0 auto; /* Center the loader */
-            border-radius: 10px; /* Ensure rounded corners for the loader */
+        /* Replace the loader with an image-based loading animation */
+        .loader-img {
+            max-width: 200px; /* Adjust the size of the animation */
+            margin: 0 auto;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Responsive styling */
         @media (max-width: 600px) {
             h1 {
-                font-size: 1.8rem;
+                font-size: 1.6rem; /* Slightly smaller title for mobile */
             }
 
             .logo {
@@ -81,18 +70,16 @@
                 font-size: 1rem;
             }
 
-            .loader {
-                width: 50px;
-                height: 50px;
+            .loader-img {
+                max-width: 150px; /* Adjust loader size on mobile */
             }
         }
     </style>
     <script>
         function openAppOrStore(appScheme, appStoreURL, playStoreURL, hold) {
-            // If 'hold' parameter is 1, prevent redirection
             if (hold === "1") {
-                document.getElementById('loading').style.display = 'block'; // Keep the loading visible
-                return; // Don't redirect
+                document.getElementById('loading').style.display = 'block'; // Keep loading visible
+                return; // Don't attempt to redirect
             }
 
             // Create an invisible iframe to attempt to open the app
@@ -101,26 +88,24 @@
             iframe.src = appScheme;
             document.body.appendChild(iframe);
 
-            // Check if the app is installed
-            setTimeout(function() {
-                document.body.removeChild(iframe);
+            // Check if the app is installed by waiting for a timeout
+            var timeout = setTimeout(function() {
+                document.body.removeChild(iframe); // Remove iframe after timeout
+                window.location.href = appStoreURL; // Redirect to app store if app not installed
+            }, 1500); // Increased timeout to give app enough time to open
 
-                // If the app is not installed, redirect to the appropriate store
-                if (navigator.userAgent.match(/(iPhone|iPad|iPod)/i)) {
-                    window.location.href = appStoreURL;
-                } else if (navigator.userAgent.match(/android/i)) {
-                    window.location.href = playStoreURL;
-                } else {
-                    alert("Unsupported platform");
-                }
-            }, 1000);
+            // Check if app opened within the timeout
+            window.onblur = function() {
+                clearTimeout(timeout); // Clear timeout if app opened
+                // If the app opened successfully, we do nothing here
+            };
         }
 
         // On page load, fetch the app info from the URL parameters
         window.onload = function() {
             const appScheme = 'com.karamsawalha.arabicschools://arabicschooln/'+getUrlParameter('i'); // Replace with your app's scheme
-            const appStoreURL = 'https://apps.apple.com/us/app/arabic-school-for-parents/id6466744621'; // Replace with your App Store URL
-            const playStoreURL = 'https://play.google.com/store/apps/details?id=com.karamsawalha.arabicschools'; // Replace with your Play Store URL
+            const appStoreURL = 'https://apps.apple.com/us/app/arabic-school-for-parents/id6466744621'; // App Store URL
+            const playStoreURL = 'https://play.google.com/store/apps/details?id=com.karamsawalha.arabicschools'; // Play Store URL
             const hold = getUrlParameter('h'); // Get the 'hold' parameter value from the URL
 
             // Show the loading cycle
@@ -146,9 +131,9 @@
         <h1>Arabic School for Parents</h1>
         <p>This page will attempt to open your app or redirect you to the app store to install the app if not found.</p>
         
-        <!-- Loading Spinner -->
+        <!-- Loading Spinner (Image-based) -->
         <div id="loading" class="loading" style="display: none;">
-            <div class="loader"></div>
+            <img src="https://personal-ms7xwb5h.outsystemscloud.com/arabicschool/img/arabicschool.Rolling1s200px.svg" alt="Loading..." class="loader-img">
         </div>
     </div>
 </body>
