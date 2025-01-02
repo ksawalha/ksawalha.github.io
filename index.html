@@ -18,7 +18,7 @@
             background-color: #ffffff;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
+            align-items: center;
             min-height: 100vh;
             overflow: hidden;
         }
@@ -35,7 +35,7 @@
 
         .image-container {
             background: url('https://personal-ms7xwb5h.outsystemscloud.com/arabicschool/img/arabicschool.loginbackground.jpg') no-repeat center center/cover;
-            flex: 1; /* Take maximum available height */
+            height: 60%; /* Take 60% of the viewport height */
             border-radius: 15px;
             margin: 0 0 10px 0;
         }
@@ -66,8 +66,7 @@
         .content {
             padding: 20px;
             overflow-y: auto;
-            flex-shrink: 0;
-            max-height: 30vh; /* Ensure the content area is always visible */
+            flex-grow: 1;
         }
 
         .title {
@@ -100,7 +99,7 @@
             }
 
             .image-container {
-                height: 60vh; /* Adjust height for smaller screens */
+                height: 50%; /* Adjust height for smaller screens */
             }
 
             .logo-container {
