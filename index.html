@@ -16,50 +16,53 @@
 
         body {
             background-color: #ffffff;
-            text-align: center;
-            padding: 20px;
             margin: 0;
             height: 100vh;
             display: flex;
-            justify-content: center;
-            align-items: flex-start; /* Align the content to the top */
             flex-direction: column;
-            overflow: hidden; /* Prevent scrolling on small screens */
+            justify-content: space-between; /* Ensures content is spaced out */
+            align-items: center;
+            overflow: hidden;
+            padding: 0 20px;
         }
 
         h1 {
             font-size: 2rem;
-            margin-bottom: 20px;
             color: #333;
             font-weight: 700;
+            text-align: center;
+            margin-top: 20px;
         }
 
         p {
             font-size: 1.2rem;
             color: #555;
-            margin-bottom: 10px; /* Small bottom margin for <p> */
+            text-align: center;
+            margin-bottom: 10px;
         }
 
         .logo {
             max-width: 200px;
-            margin-bottom: 30px;
+            margin-top: 30px;
         }
 
+        /* Loading section (p and loader centered at the bottom) */
         .loading {
-            margin-top: auto; /* Pushes the loading section to the bottom */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px; /* Add some space below the loader */
             width: 100%;
-            text-align: center;
         }
 
-        /* Replace the loader with an image-based loading animation */
         .loader-img {
-            max-width: 200px; /* Adjust the size of the animation */
-            margin: 0 auto;
+            max-width: 30px;
+            margin-top: 10px; /* Space between text and loader */
         }
 
         @media (max-width: 600px) {
             h1 {
-                font-size: 1.6rem; /* Slightly smaller title for mobile */
+                font-size: 1.6rem;
             }
 
             .logo {
@@ -71,16 +74,18 @@
             }
 
             .loader-img {
-                max-width: 150px; /* Adjust loader size on mobile */
+                max-width: 30px;
             }
         }
     </style>
     <script>
         function openAppOrStore(appScheme, appStoreURL, playStoreURL, hold) {
             if (hold === "1") {
-                document.getElementById('loading').style.display = 'block'; // Keep loading visible
-                return; // Don't attempt to redirect
+                document.getElementById('loading').style.display = 'block';
+                return;
             }
+
+            var platform = detectPlatform();
 
             // Create an invisible iframe to attempt to open the app
             var iframe = document.createElement("iframe");
@@ -88,40 +93,54 @@
             iframe.src = appScheme;
             document.body.appendChild(iframe);
 
-            // Check if the app is installed by waiting for a timeout
             var timeout = setTimeout(function() {
-                document.body.removeChild(iframe); // Remove iframe after timeout
-                window.location.href = appStoreURL; // Redirect to app store if app not installed
-            }, 1500); // Increased timeout to give app enough time to open
+                document.body.removeChild(iframe);
 
-            // Check if app opened within the timeout
+                // Redirect based on platform
+                if (platform === "iOS") {
+                    window.location.href = appStoreURL; // Redirect to App Store for iOS
+                } else if (platform === "Android") {
+                    window.location.href = playStoreURL; // Redirect to Play Store for Android
+                } else {
+                    alert("Unsupported platform.");
+                }
+            }, 1500);
+
             window.onblur = function() {
-                clearTimeout(timeout); // Clear timeout if app opened
-                // If the app opened successfully, we do nothing here
+                clearTimeout(timeout);
             };
         }
 
-        // Function to extract the path parameter
-        function getPathParameter(name) {
-            const path = window.location.pathname;
-            const regex = new RegExp(`/${name}/([^/]+)`); // Regex to extract parameter after /i/
-            const match = path.match(regex);
-            return match ? match[1] : null;
+        function detectPlatform() {
+            var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+            // iOS device check
+            if (/iPhone|iPad|iPod/i.test(userAgent)) {
+                return "iOS";
+            }
+            // Android device check
+            if (/android/i.test(userAgent)) {
+                return "Android";
+            }
+
+            return "Unknown"; // Default to unknown if not iOS or Android
         }
 
-        // On page load, fetch the app info from the URL parameters
         window.onload = function() {
-            const appScheme = 'com.karamsawalha.arabicschools://arabicschooln/'+atob(getPathParameter('i')); // Get parameter from the URL path
+            const appScheme = 'com.karamsawalha.arabicschools://arabicschooln/'+getUrlParameter('i'); // App Scheme
             const appStoreURL = 'https://apps.apple.com/us/app/arabic-school-for-parents/id6466744621'; // App Store URL
             const playStoreURL = 'https://play.google.com/store/apps/details?id=com.karamsawalha.arabicschools'; // Play Store URL
-            const hold = getPathParameter('hold'); // Get the 'hold' parameter value from the URL path
+            const hold = getUrlParameter('h'); // Get 'hold' parameter from URL
 
-            // Show the loading cycle
-            document.getElementById('loading').style.display = 'block';
-
-            // Call the function to open the app or store
+            document.getElementById('loading').style.display = 'block'; // Show loading animation
             openAppOrStore(appScheme, appStoreURL, playStoreURL, hold);
         };
+
+        // Function to extract URL parameters
+        function getUrlParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
     </script>
 </head>
 <body>
