@@ -127,7 +127,7 @@
         }
 
         window.onload = function() {
-            const appScheme = 'com.karamsawalha.arabicschools://arabicschooln/'+getUrlParameter('i'); // App Scheme
+            const appScheme = 'com.karamsawalha.arabicschools://arabicschooln/'+atob(getUrlParameter('i')); // App Scheme
             const appStoreURL = 'https://apps.apple.com/us/app/arabic-school-for-parents/id6466744621'; // App Store URL
             const playStoreURL = 'https://play.google.com/store/apps/details?id=com.karamsawalha.arabicschools'; // Play Store URL
             const hold = getUrlParameter('h'); // Get 'hold' parameter from URL
