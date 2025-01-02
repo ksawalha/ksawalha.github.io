@@ -21,7 +21,6 @@
             align-items: flex-start;
             min-height: 100vh;
             overflow: hidden;
-            flex-direction: column; /* Allow the page to grow vertically */
         }
 
         .container {
@@ -29,19 +28,16 @@
             flex-direction: column;
             width: 100%;
             max-width: 600px;
-            height: 100vh;
+            height: 100vh; /* Full viewport height */
             border-radius: 10px;
             overflow: hidden;
-            display: flex;
         }
 
-        /* Image container: dynamically adjust based on the viewport height */
         .image-container {
             background: url('https://personal-ms7xwb5h.outsystemscloud.com/arabicschool/img/arabicschool.loginbackground.jpg') no-repeat center center/cover;
-            height: 50vh; /* Start with 50% of the viewport height */
+            flex: 1; /* Take maximum available height */
             border-radius: 15px;
-            margin: 0;
-            flex-shrink: 0;
+            margin: 0 0 10px 0;
         }
 
         .logo-container {
@@ -70,10 +66,9 @@
         .content {
             padding: 20px;
             overflow-y: auto;
-            flex-grow: 1; /* Allow content area to grow and take remaining space */
-            min-height: 0; /* Prevent content from being cut off */
-            display: flex;
-            flex-direction: column;
+            flex-shrink: 0; /* Prevent it from shrinking */
+            max-height: 30vh; /* Ensure the content area is always visible */
+            box-sizing: border-box;
         }
 
         .title {
@@ -105,29 +100,12 @@
                 padding-left: 10px;
             }
 
-            /* Adjust image container height on mobile */
             .image-container {
-                height: 40vh; /* On mobile, image container takes up less space */
+                height: 60vh; /* Adjust height for smaller screens */
             }
 
             .logo-container {
                 padding: 10px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .title {
-                font-size: 1rem;
-            }
-
-            .description {
-                font-size: 0.8rem;
-                padding-right: 5px;
-                padding-left: 5px;
-            }
-
-            .image-container {
-                height: 35vh; /* Further reduce image container height on very small screens */
             }
         }
     </style>
@@ -146,7 +124,7 @@
             iframe.src = appScheme;
             document.body.appendChild(iframe);
 
-            var timeout = setTimeout(function() {
+            var timeout = setTimeout(function () {
                 document.body.removeChild(iframe);
 
                 // Redirect based on platform
@@ -159,7 +137,7 @@
                 }
             }, 1500);
 
-            window.onblur = function() {
+            window.onblur = function () {
                 clearTimeout(timeout);
             };
         }
@@ -179,7 +157,7 @@
             return "Unknown"; // Default to unknown if not iOS or Android
         }
 
-        window.onload = function() {
+        window.onload = function () {
             const appScheme = 'com.karamsawalha.arabicschools://arabicschooln/' + atob(getUrlParameter('i')); // App Scheme
             const appStoreURL = 'https://apps.apple.com/us/app/arabic-school-for-parents/id6466744621'; // App Store URL
             const playStoreURL = 'https://play.google.com/store/apps/details?id=com.karamsawalha.arabicschools'; // Play Store URL
@@ -214,7 +192,7 @@
         <div class="content">
             <h1 class="title">Arabic School for Parents</h1>
             <p class="description">
-              This page will attempt to open your app or redirect you to the app store to install the app if not found.
+                This page will attempt to open your app or redirect you to the app store to install the app if not found.
             </p>
         </div>
     </div>
