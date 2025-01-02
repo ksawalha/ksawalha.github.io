@@ -33,13 +33,13 @@
             overflow: hidden;
         }
 
-        /* Image container: Take available height but avoid overflow */
+        /* Image container: Adjust dynamically based on viewport */
         .image-container {
             background: url('https://personal-ms7xwb5h.outsystemscloud.com/arabicschool/img/arabicschool.loginbackground.jpg') no-repeat center center/cover;
             flex-grow: 1;
-            height: 50%; /* Adjust height to fit half of the screen */
+            height: 50vh; /* Dynamic height based on viewport height */
             border-radius: 15px;
-            margin: 10px,0px,10px,0px;
+            margin: 10px;
         }
 
         .logo-container {
@@ -87,6 +87,8 @@
             line-height: 1.6;
             text-align: justify;
             margin-top: 10px;
+            word-wrap: break-word; /* Ensure text breaks properly */
+            word-break: break-word; /* Prevent overflow by breaking long words */
         }
 
         @media (max-width: 768px) {
@@ -96,10 +98,12 @@
 
             .description {
                 font-size: 0.9rem;
+                padding-right: 10px; /* Ensure text fits well within container */
+                padding-left: 10px;  /* Add padding to prevent text from being too close to the edge */
             }
 
             .image-container {
-                height: 200px; /* Adjust for smaller screens */
+                height: 40vh; /* Adjust for smaller screens */
             }
 
             .logo-container {
