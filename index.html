@@ -21,6 +21,7 @@
             align-items: flex-start;
             min-height: 100vh;
             overflow: hidden;
+            flex-direction: column; /* Allow the page to grow vertically */
         }
 
         .container {
@@ -28,17 +29,18 @@
             flex-direction: column;
             width: 100%;
             max-width: 600px;
-            height: 100vh; /* Full viewport height */
+            height: 100vh;
             border-radius: 10px;
             overflow: hidden;
+            display: flex;
         }
 
-        /* Image container with dynamic height */
+        /* Image container: dynamically adjust based on the viewport height */
         .image-container {
             background: url('https://personal-ms7xwb5h.outsystemscloud.com/arabicschool/img/arabicschool.loginbackground.jpg') no-repeat center center/cover;
-            height: 70vh; /* Set height to 70% of the viewport height */
+            height: 50vh; /* Start with 50% of the viewport height */
             border-radius: 15px;
-            margin: 0 0 10px 0;
+            margin: 0;
             flex-shrink: 0;
         }
 
@@ -68,9 +70,10 @@
         .content {
             padding: 20px;
             overflow-y: auto;
-            flex-grow: 1; /* Allow content area to grow */
-            flex-shrink: 0; /* Prevent it from shrinking */
+            flex-grow: 1; /* Allow content area to grow and take remaining space */
             min-height: 0; /* Prevent content from being cut off */
+            display: flex;
+            flex-direction: column;
         }
 
         .title {
@@ -102,12 +105,29 @@
                 padding-left: 10px;
             }
 
+            /* Adjust image container height on mobile */
             .image-container {
-                height: 60vh; /* Adjust height for smaller screens */
+                height: 40vh; /* On mobile, image container takes up less space */
             }
 
             .logo-container {
                 padding: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .title {
+                font-size: 1rem;
+            }
+
+            .description {
+                font-size: 0.8rem;
+                padding-right: 5px;
+                padding-left: 5px;
+            }
+
+            .image-container {
+                height: 35vh; /* Further reduce image container height on very small screens */
             }
         }
     </style>
