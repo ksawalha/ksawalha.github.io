@@ -28,23 +28,23 @@
             flex-direction: column;
             width: 100%;
             max-width: 600px;
-            height: 100vh;
+            height: 100vh; /* Full viewport height */
             border-radius: 10px;
             overflow: hidden;
         }
 
-        /* Image container: Adjust dynamically based on viewport */
+        /* Image container with dynamic height */
         .image-container {
             background: url('https://personal-ms7xwb5h.outsystemscloud.com/arabicschool/img/arabicschool.loginbackground.jpg') no-repeat center center/cover;
-            flex-grow: 1;
-            height: 50vh; /* Dynamic height based on viewport height */
+            height: 50vh; /* Set height to 50% of the viewport height */
             border-radius: 15px;
-            margin: 10px;
+            margin: 0 0 10px 0;
+            flex-shrink: 0;
         }
 
         .logo-container {
             display: flex;
-            justify-content: space-between; /* Align logo to the left and loading to the right */
+            justify-content: space-between;
             align-items: center;
             padding: 15px;
             position: relative;
@@ -52,7 +52,6 @@
 
         .logo {
             width: 80px;
-            height: auto;
         }
 
         .loading {
@@ -65,12 +64,13 @@
             height: 30px;
         }
 
-        /* Content: Take remaining space and make it scrollable if necessary */
+        /* Content Area */
         .content {
             padding: 20px;
             overflow-y: auto;
-            flex-shrink: 0;
-            flex-grow: 0;
+            flex-grow: 1; /* Allow content area to grow */
+            flex-shrink: 0; /* Prevent it from shrinking */
+            min-height: 0; /* Prevent content from being cut off */
         }
 
         .title {
@@ -87,8 +87,8 @@
             line-height: 1.6;
             text-align: justify;
             margin-top: 10px;
-            word-wrap: break-word; /* Ensure text breaks properly */
-            word-break: break-word; /* Prevent overflow by breaking long words */
+            word-wrap: break-word;
+            word-break: break-word;
         }
 
         @media (max-width: 768px) {
@@ -98,12 +98,12 @@
 
             .description {
                 font-size: 0.9rem;
-                padding-right: 10px; /* Ensure text fits well within container */
-                padding-left: 10px;  /* Add padding to prevent text from being too close to the edge */
+                padding-right: 10px;
+                padding-left: 10px;
             }
 
             .image-container {
-                height: 40vh; /* Adjust for smaller screens */
+                height: 40vh; /* Adjust height for smaller screens */
             }
 
             .logo-container {
@@ -186,7 +186,7 @@
                 <img src="https://personal-ms7xwb5h.outsystemscloud.com/arabicschool/img/arabicschool.Rolling1s200px.svg" alt="Loading..." class="loader-img">
             </div>
         </div>
-        
+
         <!-- Header Image -->
         <div class="image-container"></div>
 
