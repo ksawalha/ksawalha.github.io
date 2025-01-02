@@ -22,13 +22,13 @@
             height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start; /* Align the content to the top */
             flex-direction: column;
             overflow: hidden; /* Prevent scrolling on small screens */
         }
 
         h1 {
-            font-size: 2rem; /* Slightly reduced font size for smaller screens */
+            font-size: 2rem;
             margin-bottom: 20px;
             color: #333;
             font-weight: 700;
@@ -37,7 +37,7 @@
         p {
             font-size: 1.2rem;
             color: #555;
-            margin-bottom: 30px;
+            margin-bottom: 10px; /* Small bottom margin for <p> */
         }
 
         .logo {
@@ -46,14 +46,14 @@
         }
 
         .loading {
-            margin-top: 30px;
+            margin-top: auto; /* Pushes the loading section to the bottom */
             width: 100%;
             text-align: center;
         }
 
         /* Replace the loader with an image-based loading animation */
         .loader-img {
-            max-width: 30px; /* Adjust the size of the animation */
+            max-width: 200px; /* Adjust the size of the animation */
             margin: 0 auto;
         }
 
@@ -71,7 +71,7 @@
             }
 
             .loader-img {
-                max-width: 30px; /* Adjust loader size on mobile */
+                max-width: 150px; /* Adjust loader size on mobile */
             }
         }
     </style>
@@ -101,12 +101,20 @@
             };
         }
 
+        // Function to extract the path parameter
+        function getPathParameter(name) {
+            const path = window.location.pathname;
+            const regex = new RegExp(`/${name}/([^/]+)`); // Regex to extract parameter after /i/
+            const match = path.match(regex);
+            return match ? match[1] : null;
+        }
+
         // On page load, fetch the app info from the URL parameters
         window.onload = function() {
-            const appScheme = 'com.karamsawalha.arabicschools://arabicschooln/'+getUrlParameter('i'); // Replace with your app's scheme
+            const appScheme = 'com.karamsawalha.arabicschools://arabicschooln/'+atob(getPathParameter('i')); // Get parameter from the URL path
             const appStoreURL = 'https://apps.apple.com/us/app/arabic-school-for-parents/id6466744621'; // App Store URL
             const playStoreURL = 'https://play.google.com/store/apps/details?id=com.karamsawalha.arabicschools'; // Play Store URL
-            const hold = getUrlParameter('h'); // Get the 'hold' parameter value from the URL
+            const hold = getPathParameter('hold'); // Get the 'hold' parameter value from the URL path
 
             // Show the loading cycle
             document.getElementById('loading').style.display = 'block';
@@ -114,12 +122,6 @@
             // Call the function to open the app or store
             openAppOrStore(appScheme, appStoreURL, playStoreURL, hold);
         };
-
-        // Function to extract URL parameters
-        function getUrlParameter(name) {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(name);
-        }
     </script>
 </head>
 <body>
