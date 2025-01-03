@@ -106,62 +106,63 @@
         }
     </style>
     <script>
-        function openAppOrStore(appScheme, appStoreURL, playStoreURL, hold) {
-            if (hold === "1") {
-                document.getElementById('loading').style.display = 'block';
-                return;
-            }
+    function openAppOrStore(appScheme, appStoreURL, playStoreURL, hold) {
+    if (hold === "1") {
+        document.getElementById('loading').style.display = 'block';
+        return;
+    }
 
-            var platform = detectPlatform();
+    var platform = detectPlatform();
+    
+    // Try to open the app using the app scheme directly
+    window.location = appScheme;
 
-            var iframe = document.createElement("iframe");
-            iframe.style.display = "none";
-            iframe.src = appScheme;
-            document.body.appendChild(iframe);
-
-            var timeout = setTimeout(function () {
-                document.body.removeChild(iframe);
-
-                if (platform === "iOS") {
-                    window.location.href = appStoreURL;
-                } else if (platform === "Android") {
-                    window.location.href = playStoreURL;
-                } else {
-                    alert("Unsupported platform.");
-                }
-            }, 1500);
-
-            window.onblur = function () {
-                clearTimeout(timeout);
-            };
+    // Timeout to redirect to the app store if the app doesn't open
+    var timeout = setTimeout(function () {
+        // If the app hasn't opened, redirect to the store
+        if (platform === "iOS") {
+            window.location.href = appStoreURL;  // Redirect to App Store for iOS
+        } else if (platform === "Android") {
+            window.location.href = playStoreURL;  // Redirect to Play Store for Android
+        } else {
+            alert("Unsupported platform.");
         }
+    }, 1500);  // Wait for 1.5 seconds before redirecting
 
-        function detectPlatform() {
-            var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+    window.onblur = function () {
+        clearTimeout(timeout);  // Clear the timeout if the app scheme successfully opened the app
+    };
+}
 
-            if (/iPhone|iPad|iPod/i.test(userAgent)) {
-                return "iOS";
-            }
-            if (/android/i.test(userAgent)) {
-                return "Android";
-            }
-            return "Unknown";
-        }
+function detectPlatform() {
+    var userAgent = navigator.userAgent || navigator.vendor || window.opera;
 
-        window.onload = function () {
-            const appScheme = 'com.karamsawalha.arabicschools://arabicschooln/' + atob(getUrlParameter('i')); 
-            const appStoreURL = 'https://apps.apple.com/us/app/arabic-school-for-parents/id6466744621'; 
-            const playStoreURL = 'https://play.google.com/store/apps/details?id=com.karamsawalha.arabicschools'; 
-            const hold = getUrlParameter('h');
+    // iOS device check
+    if (/iPhone|iPad|iPod/i.test(userAgent)) {
+        return "iOS";
+    }
+    // Android device check
+    if (/android/i.test(userAgent)) {
+        return "Android";
+    }
 
-            document.getElementById('loading').style.display = 'block';
-            openAppOrStore(appScheme, appStoreURL, playStoreURL, hold);
-        };
+    return "Unknown";  // Default to unknown if neither iOS nor Android
+}
 
-        function getUrlParameter(name) {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(name);
-        }
+window.onload = function () {
+    const appScheme = 'com.karamsawalha.arabicschools://arabicschooln/' + atob(getUrlParameter('i')); 
+    const appStoreURL = 'https://apps.apple.com/us/app/arabic-school-for-parents/id6466744621'; 
+    const playStoreURL = 'https://play.google.com/store/apps/details?id=com.karamsawalha.arabicschools'; 
+    const hold = getUrlParameter('h');
+
+    document.getElementById('loading').style.display = 'block';
+    openAppOrStore(appScheme, appStoreURL, playStoreURL, hold);
+};
+
+function getUrlParameter(name) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(name);
+}
     </script>
 </head>
 <body>
