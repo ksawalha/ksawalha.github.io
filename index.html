@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,43 +8,30 @@
     <style>
         * {
             font-family: 'Urbanist', 'Tajawal', sans-serif;
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
         }
-
         body {
             background-color: #ffffff;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            overflow: hidden;
+            height: 100%; /* Ensure full viewport height */
+            margin: 0;
         }
 
         .container {
             display: flex;
             flex-direction: column;
+            height: 100vh; /* Full height of the viewport */
             width: 100%;
-            max-width: 600px;
-            height: 100%; /* Full viewport height */
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .image-container {
-            background: url('https://personal-ms7xwb5h.outsystemscloud.com/arabicschool/img/arabicschool.loginbackground.jpg') no-repeat center center/cover;
-            height: 70%; /* Take 60% of the viewport height */
-            border-radius: 15px;
-            margin: 0px 10px 0px 10px;
+            max-width: 100%;
         }
 
         .logo-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            height: 15%; /* 15% of the viewport height */
             padding: 15px;
-            position: relative;
         }
 
         .logo {
@@ -53,20 +39,38 @@
         }
 
         .loading {
-            display: none;
-            margin-left: auto;
+        display: flex;          /* Use flex layout */
+        flex-direction: row;    /* Arrange items in a row */
+        justify-content: center;/* Center items horizontally */
+        align-items: center;    /* Center items vertically */
+        flex-wrap: nowrap;      /* Prevent wrapping to multiple rows */
         }
-
         .loader-img {
-            width: 30px;
-            height: 30px;
+            width: 30px; 
+            height: 30px; 
+            margin-right: 10px; 
         }
 
-        /* Content Area */
+        h3 {
+            margin: 0; 
+            font-size: 0.8rem;
+            color: #555;
+            font-weight: bold;
+        }
+
+        .image-container {
+            background-image: url('https://personal-ms7xwb5h.outsystemscloud.com/arabicschool/img/arabicschool.loginbackground.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 67%; /* 67% of the viewport height */
+            border-radius: 15px;
+            margin: 0 10px;
+        }
+
         .content {
-            padding: 20px;
+            height: 17%; /* 17% of the viewport height */
+            padding: 10px;
             overflow-y: auto;
-            flex-grow: 1;
         }
 
         .title {
@@ -94,12 +98,6 @@
 
             .description {
                 font-size: 0.9rem;
-                padding-right: 10px;
-                padding-left: 10px;
-            }
-
-            .image-container {
-                height: 50%; /* Adjust height for smaller screens */
             }
 
             .logo-container {
@@ -116,7 +114,6 @@
 
             var platform = detectPlatform();
 
-            // Create an invisible iframe to attempt to open the app
             var iframe = document.createElement("iframe");
             iframe.style.display = "none";
             iframe.src = appScheme;
@@ -125,11 +122,10 @@
             var timeout = setTimeout(function () {
                 document.body.removeChild(iframe);
 
-                // Redirect based on platform
                 if (platform === "iOS") {
-                    window.location.href = appStoreURL; // Redirect to App Store for iOS
+                    window.location.href = appStoreURL;
                 } else if (platform === "Android") {
-                    window.location.href = playStoreURL; // Redirect to Play Store for Android
+                    window.location.href = playStoreURL;
                 } else {
                     alert("Unsupported platform.");
                 }
@@ -143,36 +139,31 @@
         function detectPlatform() {
             var userAgent = navigator.userAgent || navigator.vendor || window.opera;
 
-            // iOS device check
             if (/iPhone|iPad|iPod/i.test(userAgent)) {
                 return "iOS";
             }
-            // Android device check
             if (/android/i.test(userAgent)) {
                 return "Android";
             }
-
-            return "Unknown"; // Default to unknown if not iOS or Android
+            return "Unknown";
         }
 
         window.onload = function () {
-            const appScheme = 'com.karamsawalha.arabicschools://arabicschooln/' + atob(getUrlParameter('i')); // App Scheme
-            const appStoreURL = 'https://apps.apple.com/us/app/arabic-school-for-parents/id6466744621'; // App Store URL
-            const playStoreURL = 'https://play.google.com/store/apps/details?id=com.karamsawalha.arabicschools'; // Play Store URL
-            const hold = getUrlParameter('h'); // Get 'hold' parameter from URL
+            const appScheme = 'com.karamsawalha.arabicschools://arabicschooln/' + atob(getUrlParameter('i')); 
+            const appStoreURL = 'https://apps.apple.com/us/app/arabic-school-for-parents/id6466744621'; 
+            const playStoreURL = 'https://play.google.com/store/apps/details?id=com.karamsawalha.arabicschools'; 
+            const hold = getUrlParameter('h');
 
-            document.getElementById('loading').style.display = 'block'; // Show loading animation
+            document.getElementById('loading').style.display = 'block';
             openAppOrStore(appScheme, appStoreURL, playStoreURL, hold);
         };
 
-        // Function to extract URL parameters
         function getUrlParameter(name) {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get(name);
         }
     </script>
 </head>
-
 <body>
     <div class="container">
         <!-- Logo and Loading -->
@@ -180,6 +171,7 @@
             <img src="https://personal-ms7xwb5h.outsystemscloud.com/arabicschool/img/arabicschool.staticlogo.png" alt="School Logo" class="logo">
             <div id="loading" class="loading">
                 <img src="https://personal-ms7xwb5h.outsystemscloud.com/arabicschool/img/arabicschool.Rolling1s200px.svg" alt="Loading..." class="loader-img">
+                <h3>Redirecting</h3>
             </div>
         </div>
 
@@ -195,5 +187,4 @@
         </div>
     </div>
 </body>
-
 </html>
