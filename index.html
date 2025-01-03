@@ -14,14 +14,13 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100%; /* Ensure full viewport height */
+            height: 100vh; /* Full height of the viewport */
             margin: 0;
         }
 
         .container {
             display: flex;
             flex-direction: column;
-            height: 100%; /* Full height of the viewport */
             width: 100%;
             max-width: 100%;
         }
@@ -30,7 +29,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            height: 10%; /* 15% of the viewport height */
+            height: 10%;
             padding: 10px;
         }
 
@@ -39,20 +38,20 @@
         }
 
         .loading {
-        display: flex;          /* Use flex layout */
-        flex-direction: row;    /* Arrange items in a row */
-        justify-content: center;/* Center items horizontally */
-        align-items: center;    /* Center items vertically */
-        flex-wrap: nowrap;      /* Prevent wrapping to multiple rows */
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
         }
+
         .loader-img {
-            width: 30px; 
-            height: 30px; 
-            margin-right: 10px; 
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
         }
 
         h3 {
-            margin: 0; 
+            margin: 0;
             font-size: 0.8rem;
             color: #555;
             font-weight: bold;
@@ -62,13 +61,13 @@
             background-image: url('https://personal-ms7xwb5h.outsystemscloud.com/arabicschool/img/arabicschool.loginbackground.jpg');
             background-size: cover;
             background-position: center;
-            height: 67%; /* 67% of the viewport height */
+            height: 67%;
             border-radius: 15px;
             margin: 0 10px;
         }
 
         .content {
-            height: 17%; /* 17% of the viewport height */
+            height: 17%;
             padding: 10px;
             overflow-y: auto;
         }
@@ -87,8 +86,6 @@
             line-height: 1.6;
             text-align: justify;
             margin-top: 10px;
-            word-wrap: break-word;
-            word-break: break-word;
         }
 
         @media (max-width: 768px) {
@@ -107,62 +104,67 @@
     </style>
     <script>
     function openAppOrStore(appScheme, appStoreURL, playStoreURL, hold) {
-    if (hold === "1") {
-        document.getElementById('loading').style.display = 'block';
-        return;
-    }
-
-    var platform = detectPlatform();
-    
-    // Try to open the app using the app scheme directly
-    window.location = appScheme;
-
-    // Timeout to redirect to the app store if the app doesn't open
-    var timeout = setTimeout(function () {
-        // If the app hasn't opened, redirect to the store
-        if (platform === "iOS") {
-            window.location.href = appStoreURL;  // Redirect to App Store for iOS
-        } else if (platform === "Android") {
-            window.location.href = playStoreURL;  // Redirect to Play Store for Android
-        } else {
-            alert("Unsupported platform.");
+        if (hold === "1") {
+            document.getElementById('loading').style.display = 'block';
+            return;
         }
-    }, 1500);  // Wait for 1.5 seconds before redirecting
 
-    window.onblur = function () {
-        clearTimeout(timeout);  // Clear the timeout if the app scheme successfully opened the app
+        var platform = detectPlatform();
+
+        // Try to open the app using the app scheme directly
+        window.location = appScheme;
+
+        // Setup a fallback function in case the app does not open
+        var fallbackTimer = setTimeout(function () {
+            // Redirect to the store if the app doesn't open
+            if (platform === "iOS") {
+                window.location.href = appStoreURL;  // Redirect to App Store for iOS
+            } else if (platform === "Android") {
+                window.location.href = playStoreURL;  // Redirect to Play Store for Android
+            } else {
+                alert("Unsupported platform.");
+            }
+        }, 1500);  // Wait for 1.5 seconds before redirecting
+
+        // Detect if the app has been opened by listening to visibility changes
+        var visibilityHandler = function () {
+            if (document.visibilityState === 'hidden') {
+                clearTimeout(fallbackTimer); // Cancel the fallback if the app opened successfully
+                window.removeEventListener('visibilitychange', visibilityHandler); // Remove the listener
+            }
+        };
+        window.addEventListener('visibilitychange', visibilityHandler);
+    }
+
+    function detectPlatform() {
+        var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+        // iOS device check
+        if (/iPhone|iPad|iPod/i.test(userAgent)) {
+            return "iOS";
+        }
+        // Android device check
+        if (/android/i.test(userAgent)) {
+            return "Android";
+        }
+
+        return "Unknown";  // Default to unknown if neither iOS nor Android
+    }
+
+    window.onload = function () {
+        const appScheme = 'com.karamsawalha.arabicschools://arabicschooln/' + atob(getUrlParameter('i')); 
+        const appStoreURL = 'https://apps.apple.com/us/app/arabic-school-for-parents/id6466744621'; 
+        const playStoreURL = 'https://play.google.com/store/apps/details?id=com.karamsawalha.arabicschools'; 
+        const hold = getUrlParameter('h');
+
+        document.getElementById('loading').style.display = 'block';
+        openAppOrStore(appScheme, appStoreURL, playStoreURL, hold);
     };
-}
 
-function detectPlatform() {
-    var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-
-    // iOS device check
-    if (/iPhone|iPad|iPod/i.test(userAgent)) {
-        return "iOS";
+    function getUrlParameter(name) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
     }
-    // Android device check
-    if (/android/i.test(userAgent)) {
-        return "Android";
-    }
-
-    return "Unknown";  // Default to unknown if neither iOS nor Android
-}
-
-window.onload = function () {
-    const appScheme = 'com.karamsawalha.arabicschools://arabicschooln/' + atob(getUrlParameter('i')); 
-    const appStoreURL = 'https://apps.apple.com/us/app/arabic-school-for-parents/id6466744621'; 
-    const playStoreURL = 'https://play.google.com/store/apps/details?id=com.karamsawalha.arabicschools'; 
-    const hold = getUrlParameter('h');
-
-    document.getElementById('loading').style.display = 'block';
-    openAppOrStore(appScheme, appStoreURL, playStoreURL, hold);
-};
-
-function getUrlParameter(name) {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get(name);
-}
     </script>
 </head>
 <body>
