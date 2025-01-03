@@ -109,68 +109,73 @@
         }
     </style>
     <script>
-    function openAppOrStore(appScheme, appStoreURL, playStoreURL, hold) {
-        if (hold === "1") {
-            document.getElementById('loading').style.display = 'block';
-            return;
-        }
-
-        var platform = detectPlatform();
-
-        // Try to open the app using the app scheme directly
-        window.location = appScheme;
-
-        // Setup a fallback function in case the app does not open
-        var fallbackTimer = setTimeout(function () {
-            // Redirect to the store if the app doesn't open
-            if (platform === "iOS") {
-                window.location.href = appStoreURL;  // Redirect to App Store for iOS
-            } else if (platform === "Android") {
-                window.location.href = playStoreURL;  // Redirect to Play Store for Android
-            } else {
-                alert("Unsupported platform.");
-            }
-        }, 1500);  // Wait for 1.5 seconds before redirecting
-
-        // Detect if the app has been opened by listening to visibility changes
-        var visibilityHandler = function () {
-            if (document.visibilityState === 'hidden') {
-                clearTimeout(fallbackTimer); // Cancel the fallback if the app opened successfully
-                window.removeEventListener('visibilitychange', visibilityHandler); // Remove the listener
-            }
-        };
-        window.addEventListener('visibilitychange', visibilityHandler);
-    }
-
-    function detectPlatform() {
-        var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-
-        // iOS device check
-        if (/iPhone|iPad|iPod/i.test(userAgent)) {
-            return "iOS";
-        }
-        // Android device check
-        if (/android/i.test(userAgent)) {
-            return "Android";
-        }
-
-        return "Unknown";  // Default to unknown if neither iOS nor Android
-    }
-
-    window.onload = function () {
-        const appScheme = 'com.karamsawalha.arabicschools://arabicschooln/' + atob(getUrlParameter('i')); 
-        const appStoreURL = 'https://apps.apple.com/us/app/arabic-school-for-parents/id6466744621'; 
-        const playStoreURL = 'https://play.google.com/store/apps/details?id=com.karamsawalha.arabicschools'; 
-        const hold = getUrlParameter('h');
-
+function openAppOrStore(appScheme, appStoreURL, playStoreURL, hold) {
+    if (hold === "1") {
         document.getElementById('loading').style.display = 'block';
-        openAppOrStore(appScheme, appStoreURL, playStoreURL, hold);
+        return;
+    }
+
+    var platform = detectPlatform();
+    var retries = 3; // Number of retries
+    var retryInterval = 1000; // 1 second interval between retries
+    var attemptCount = 0;
+
+    var openApp = function() {
+        window.location = appScheme;
+        attemptCount++;
+
+        if (attemptCount >= retries) {
+            // After retries, redirect to store if the app didn't open
+            redirectToStore(platform, appStoreURL, playStoreURL);
+        } else {
+            // Retry after a delay
+            setTimeout(openApp, retryInterval);
+        }
     };
 
-    function getUrlParameter(name) {
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get(name);
+    openApp(); // Start the first attempt
+
+    // Set timeout to redirect to store if no app is opened after all attempts
+    var fallbackTimer = setTimeout(function() {
+        if (attemptCount < retries) {
+            redirectToStore(platform, appStoreURL, playStoreURL);
+        }
+    }, retries * retryInterval + 1500); // Total wait time (retries + additional buffer)
+
+    // Detect app opening
+    var visibilityHandler = function() {
+        if (document.visibilityState === 'hidden') {
+            clearTimeout(fallbackTimer); // Cancel the fallback if the app opened successfully
+            window.removeEventListener('visibilitychange', visibilityHandler); // Remove the listener
+        }
+    };
+    window.addEventListener('visibilitychange', visibilityHandler);
+}
+
+function redirectToStore(platform, appStoreURL, playStoreURL) {
+    if (platform === "iOS") {
+        window.location.href = appStoreURL;  // Redirect to App Store for iOS
+    } else if (platform === "Android") {
+        window.location.href = playStoreURL;  // Redirect to Play Store for Android
+    } else {
+        alert("Unsupported platform.");
     }
+}
+
+function detectPlatform() {
+    var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+    // iOS device check
+    if (/iPhone|iPad|iPod/i.test(userAgent)) {
+        return "iOS";
+    }
+    // Android device check
+    if (/android/i.test(userAgent)) {
+        return "Android";
+    }
+
+    return "Unknown";  // Default to unknown if neither iOS nor Android
+}
     </script>
 </head>
 <body>
