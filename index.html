@@ -14,13 +14,14 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh; /* Full height of the viewport */
+            height: 100%; /* Ensure full viewport height */
             margin: 0;
         }
 
         .container {
             display: flex;
             flex-direction: column;
+            height: 100vh; /* Full height of the viewport */
             width: 100%;
             max-width: 100%;
         }
@@ -29,7 +30,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            height: 10%;
+            height: 10%; /* 15% of the viewport height */
             padding: 10px;
         }
 
@@ -38,20 +39,20 @@
         }
 
         .loading {
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            align-items: center;
+        display: flex;          /* Use flex layout */
+        flex-direction: row;    /* Arrange items in a row */
+        justify-content: center;/* Center items horizontally */
+        align-items: center;    /* Center items vertically */
+        flex-wrap: nowrap;      /* Prevent wrapping to multiple rows */
         }
-
         .loader-img {
-            width: 30px;
-            height: 30px;
-            margin-right: 10px;
+            width: 30px; 
+            height: 30px; 
+            margin-right: 10px; 
         }
 
         h3 {
-            margin: 0;
+            margin: 0; 
             font-size: 0.8rem;
             color: #555;
             font-weight: bold;
@@ -61,13 +62,13 @@
             background-image: url('https://personal-ms7xwb5h.outsystemscloud.com/arabicschool/img/arabicschool.loginbackground.jpg');
             background-size: cover;
             background-position: center;
-            height: 67%;
+            height: 67%; /* 67% of the viewport height */
             border-radius: 15px;
             margin: 0 10px;
         }
 
         .content {
-            height: 17%;
+            height: 17%; /* 17% of the viewport height */
             padding: 10px;
             overflow-y: auto;
         }
@@ -86,6 +87,8 @@
             line-height: 1.6;
             text-align: justify;
             margin-top: 10px;
+            word-wrap: break-word;
+            word-break: break-word;
         }
 
         @media (max-width: 768px) {
