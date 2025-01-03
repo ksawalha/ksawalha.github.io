@@ -39,12 +39,15 @@
         }
 
         .loading {
-        display: flex;          /* Use flex layout */
-        flex-direction: row;    /* Arrange items in a row */
-        justify-content: center;/* Center items horizontally */
-        align-items: center;    /* Center items vertically */
-        flex-wrap: nowrap;      /* Prevent wrapping to multiple rows */
+            display: flex;               /* Use flex layout */
+            flex-direction: row;         /* Arrange items in a row */
+            justify-content: center;     /* Center items horizontally */
+            align-items: center;         /* Center items vertically */
+            flex-wrap: nowrap;           /* Prevent wrapping to multiple rows */
+            width: auto;                 /* Allow width to auto-adjust based on content */
+            max-width: 100%;             /* Prevent it from growing beyond container */
         }
+
         .loader-img {
             width: 30px; 
             height: 30px; 
