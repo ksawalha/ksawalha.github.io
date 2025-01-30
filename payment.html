@@ -27,22 +27,28 @@
 
     // Initialize Secure Fields
     function initEwaySecureFields() {
+      // Ensure eWAY object is available
       if (!window.eWAY) {
-        console.error("eWAY Secure Fields not loaded.");
+        console.error("eWAY object not found. Script might not have loaded properly.");
         return;
       }
-
-      eWAY.setupSecureFields({
-        key: "A1001CDqLvmy0O2TmuLvFAiqWS1WlBd670FvwcDUHBmm9oeTQSpDXcWOjJg+muBPJZWSQ0",  // Your live API key
-        fields: {
-          cardNumber: { selector: "#secureCardNumber", placeholder: "Card Number" },
-          expiry: { selector: "#secureExpiry", placeholder: "MM/YY" },
-          cvv: { selector: "#secureCVV", placeholder: "CVV" },
-        },
-      });
-
-      console.log("eWAY Secure Fields Initialized.");
+    
+      // Initialize the Secure Fields
+      try {
+        eWAY.setupSecureFields({
+          key: "A1001CDqLvmy0O2TmuLvFAiqWS1WlBd670FvwcDUHBmm9oeTQSpDXcWOjJg+muBPJZWSQ0",  // Your live API key
+          fields: {
+            cardNumber: { selector: "#secureCardNumber", placeholder: "Card Number" },
+            expiry: { selector: "#secureExpiry", placeholder: "MM/YY" },
+            cvv: { selector: "#secureCVV", placeholder: "CVV" },
+          },
+        });
+        console.log("eWAY Secure Fields initialized successfully.");
+      } catch (error) {
+        console.error("Error initializing eWAY Secure Fields:", error);
+      }
     }
+
 
     // Get Token when "Pay Now" is clicked
     function getEwayPaymentToken() {
