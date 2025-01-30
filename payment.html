@@ -10,13 +10,20 @@
       if (document.getElementById("ewayScript")) {
         return callback(); // Script already loaded, initialize immediately
       }
-
+    
       let script = document.createElement("script");
       script.id = "ewayScript";
       script.src = "https://secure.ewaypayments.com/scripts/eCrypt.min.js";
-      script.onload = callback;
+      script.onload = () => {
+        console.log("eWAY Secure Fields script loaded");
+        callback();  // Only call the callback when the script is loaded
+      };
+      script.onerror = (err) => {
+        console.error("Failed to load eWAY Secure Fields script:", err);
+      };
       document.head.appendChild(script);
     }
+
 
     // Initialize Secure Fields
     function initEwaySecureFields() {
