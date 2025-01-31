@@ -1,127 +1,182 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>eWAY Payment Tokenization</title>
-  <script>
-    // Dynamically Load the eWAY Secure Fields Script
-    function loadEwayScript(callback) {
-      if (document.getElementById("ewayScript")) {
-        return callback(); // Script already loaded, initialize immediately
-      }
-    
-      let script = document.createElement("script");
-      script.id = "ewayScript";
-      script.src = "https://secure.ewaypayments.com/scripts/eCrypt.min.js";
-      script.onload = () => {
-        console.log("eWAY Secure Fields script loaded");
-        callback();  // Only call the callback when the script is loaded
-      };
-      script.onerror = (err) => {
-        console.error("Failed to load eWAY Secure Fields script:", err);
-      };
-      document.head.appendChild(script);
-    }
-
-
-    // Initialize Secure Fields
-    function initEwaySecureFields() {
-      // Ensure eWAY object is available
-      if (!window.eWAY) {
-        console.error("eWAY object not found. Script might not have loaded properly.");
-        return;
-      }
-    
-      // Initialize the Secure Fields
-      try {
-        eWAY.setupSecureFields({
-          key: "A1001CDqLvmy0O2TmuLvFAiqWS1WlBd670FvwcDUHBmm9oeTQSpDXcWOjJg+muBPJZWSQ0",  // Your live API key
-          fields: {
-            cardNumber: { selector: "#secureCardNumber", placeholder: "Card Number" },
-            expiry: { selector: "#secureExpiry", placeholder: "MM/YY" },
-            cvv: { selector: "#secureCVV", placeholder: "CVV" },
-          },
-        });
-        console.log("eWAY Secure Fields initialized successfully.");
-      } catch (error) {
-        console.error("Error initializing eWAY Secure Fields:", error);
-      }
-    }
-
-
-    // Get Token when "Pay Now" is clicked
-    function getEwayPaymentToken() {
-      return new Promise((resolve, reject) => {
-        if (!window.eWAY) {
-          reject("eWAY Secure Fields not loaded.");
-          return;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Payment</title>
+    <script src="https://secure.ewaypayments.com/scripts/eWAY.min.js" data-init="false"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f9f9f9;
+            margin: 0;
         }
-
-        // Request a token from eWAY
-        eWAY.createToken()
-          .then((response) => {
-            if (response.token) {
-              console.log("eWAY Token:", response.token);  // Log the token
-              resolve(response.token); // Return the token
-            } else {
-              console.error("eWAY Tokenization Error:", response.error);
-              reject(response.error);
-            }
-          })
-          .catch((error) => {
-            console.error("eWAY API Error:", error);
-            reject(error);
-          });
-      });
-    }
-
-    // Handle the payment form submission
-    function handlePaymentFormSubmit(event) {
-      event.preventDefault();  // Prevent the default form submission
-
-      getEwayPaymentToken()
-        .then((token) => {
-          console.log("Payment token received:", token);
-          // You can now send the token to your server for payment processing
-        })
-        .catch((error) => {
-          console.error("Tokenization failed:", error);
-        });
-    }
-
-    // Initialize everything
-    loadEwayScript(() => {
-      initEwaySecureFields();
-
-      // Attach the form submission event
-      document.getElementById("paymentForm").addEventListener("submit", handlePaymentFormSubmit);
-    });
-  </script>
+        .payment-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 320px;
+        }
+        .field-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 12px;
+        }
+        label {
+            font-size: 14px;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .secure-field-container {
+            height: 40px; /* Set height to 40px */
+            max-height: 40px; /* Max height restriction */
+            background: #f3f3f3;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            padding-left: 10px;
+            position: relative;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        #eway-secure-field-card {
+            height: 40px !important; /* Ensure iframe fills the container height */
+            max-height: 40px !important; /* Limit the iframe to 40px */
+            width: 100% !important; /* Ensure iframe takes the full width */
+            display: block; /* Make sure iframe is treated as a block element */
+            border: none; /* Remove iframe borders */
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #0073e6;
+            color: white;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #005bb5;
+        }
+        .error-message {
+            color: red;
+            font-size: 12px;
+        }
+    </style>
+    
 </head>
 <body>
 
-  <h2>eWAY Payment Tokenization Example</h2>
+    <div class="payment-container">
+        <h3 style="text-align: center; margin-bottom: 20px;">Secure Payment</h3>
+        
+        <form id="payment_form">
+            <div class="field-group">
+                <label for="eway-secure-field-name">Card Name</label>
+                <div id="eway-secure-field-name" class="secure-field-container"></div>
+                <div id="name-error" class="error-message" style="display: none;">Please enter a valid card name.</div>
+            </div>
+            <div class="field-group">
+                <label for="eway-secure-field-card">Card Number</label>
+                <div id="eway-secure-field-card" class="secure-field-container"></div>
+                <div id="card-error" class="error-message" style="display: none;">Please enter a valid card number.</div>
+            </div>
+            <div class="field-group">
+                <label for="eway-secure-field-expiry">Card Expiry</label>
+                <div id="eway-secure-field-expiry" class="secure-field-container"></div>
+                <div id="expiry-error" class="error-message" style="display: none;">Please select a valid expiry date.</div>
+            </div>
+            <div class="field-group">
+                <label for="eway-secure-field-cvn">Card CVN</label>
+                <div id="eway-secure-field-cvn" class="secure-field-container"></div>
+                <div id="cvn-error" class="error-message" style="display: none;">Please enter a valid CVN.</div>
+            </div>
 
-  <!-- Payment Form -->
-  <form id="paymentForm">
-    <div>
-      <label for="secureCardNumber">Card Number:</label>
-      <div id="secureCardNumber"></div>  <!-- eWAY iframe will be injected here -->
-    </div>
-    
-    <div>
-      <label for="secureExpiry">Expiry (MM/YY):</label>
-      <div id="secureExpiry"></div>  <!-- eWAY iframe will be injected here -->
+            <input type="hidden" id="securefieldcode" name="SecuredCardData" value="" />
+            <button type="button" id="payButton">Process Payment</button>
+        </form>
     </div>
 
-    <div>
-      <label for="secureCVV">CVV:</label>
-      <div id="secureCVV"></div>  <!-- eWAY iframe will be injected here -->
-    </div>
+    <script>
+        var publicApiKey = "epk5C485602-B8B0-4855-8B73-B27BD5E9DA09";
 
-    <button type="submit">Pay Now</button>
-  </form>
+        var fieldStyles = "height: 40px !important; border: none !important; color: #000; background: transparent; font-size: 16px; outline: none !important; box-shadow: none !important; padding: 10px;";
+
+        var nameFieldConfig = {
+            publicApiKey: publicApiKey,
+            fieldDivId: "eway-secure-field-name",
+            fieldType: "name",
+            styles: fieldStyles
+        };
+        var cardFieldConfig = {
+            publicApiKey: publicApiKey,
+            fieldDivId: "eway-secure-field-card",
+            fieldType: "card",
+            styles: fieldStyles
+        };
+        var expiryFieldConfig = {
+            publicApiKey: publicApiKey,
+            fieldDivId: "eway-secure-field-expiry",
+            fieldType: "expiry",
+            styles: fieldStyles
+        };
+        var cvnFieldConfig = {
+            publicApiKey: publicApiKey,
+            fieldDivId: "eway-secure-field-cvn",
+            fieldType: "cvn",
+            styles: fieldStyles
+        };
+
+        var fieldValidity = {
+            name: false,
+            card: false,
+            expiry: false,
+            cvn: false
+        };
+
+        var secureFieldCode = null;
+
+        function secureFieldCallback(event) {
+            if (!event.fieldValid) {
+                console.error("Error in field:", event.targetField, event.errors);
+            } else {
+                document.getElementById(event.targetField + '-error').style.display = 'none';
+                fieldValidity[event.targetField] = event.valueIsValid;
+                secureFieldCode = event.secureFieldCode;
+            }
+
+            if (!event.valueIsValid) {
+                document.getElementById(event.targetField + '-error').style.display = 'block';
+            }
+        }
+
+        window.onload = function () {
+            eWAY.setupSecureField(nameFieldConfig, secureFieldCallback);
+            eWAY.setupSecureField(cardFieldConfig, secureFieldCallback);
+            eWAY.setupSecureField(expiryFieldConfig, secureFieldCallback);
+            eWAY.setupSecureField(cvnFieldConfig, secureFieldCallback);
+        };
+
+        document.getElementById("payButton").addEventListener("click", function () {
+            var nameValid = fieldValidity['name'];
+            var cardValid = fieldValidity['card'];
+            var expiryValid = fieldValidity['expiry'];
+            var cvnValid = fieldValidity['cvn'];
+
+            if (nameValid && cardValid && expiryValid && cvnValid) {
+                console.log(secureFieldCode);
+            } else {
+                console.error("Please fill out all fields correctly before processing the payment.");
+            }
+        });
+    </script>
 
 </body>
 </html>
