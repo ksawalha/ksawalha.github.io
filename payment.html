@@ -51,7 +51,7 @@
             }
 
             const endpoint = isSuccess 
-                ? `https://personal-uiba6aqx.outsystemscloud.com/paymentsController/rest/feedbackapi/?AccessCode=${accessCode}`
+                ? `https://personal-uiba6aqx.outsystemscloud.com/paymentsController/rest/feedbackapi/tran?AccessCode=${accessCode}`
                 : `https://personal-uiba6aqx.outsystemscloud.com/paymentsController/rest/feedbackapi/cancel?AccessCode=${accessCode}`;
 
             fetch(endpoint)
