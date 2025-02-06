@@ -3,180 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secure Payment</title>
-    <script src="https://secure.ewaypayments.com/scripts/eWAY.min.js" data-init="false"></script>
+    <title>Payments Gateway</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&family=Urbanist:wght@500;600&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Tajawal', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #f9f9f9;
+            background-color: #f0f0f0;
             margin: 0;
+            padding: 10px;
         }
-        .payment-container {
-            background: white;
+        .container {
+            text-align: center;
+            background: #fff;
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            width: 320px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 90%;
+            width: 400px;
         }
-        .field-group {
-            display: flex;
-            flex-direction: column;
-            margin-bottom: 12px;
+        h1 {
+            color: #333;
+            font-family: 'Urbanist', sans-serif;
         }
-        label {
-            font-size: 14px;
-            margin-bottom: 5px;
-            font-weight: bold;
+        p {
+            color: #666;
         }
-        .secure-field-container {
-            height: 40px; /* Set height to 40px */
-            max-height: 40px; /* Max height restriction */
-            background: #f3f3f3;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            padding-left: 10px;
-            position: relative;
-            width: 100%;
-            box-sizing: border-box;
-        }
-        #eway-secure-field-card {
-            height: 40px !important; /* Ensure iframe fills the container height */
-            max-height: 40px !important; /* Limit the iframe to 40px */
-            width: 100% !important; /* Ensure iframe takes the full width */
-            display: block; /* Make sure iframe is treated as a block element */
-            border: none; /* Remove iframe borders */
-        }
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #0073e6;
-            color: white;
-            border: none;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 4px;
-            margin-top: 10px;
-        }
-        button:hover {
-            background-color: #005bb5;
-        }
-        .error-message {
-            color: red;
-            font-size: 12px;
+        .loading {
+            width: 50px;
+            height: 50px;
         }
     </style>
-    
-</head>
-<body>
-
-    <div class="payment-container">
-        <h3 style="text-align: center; margin-bottom: 20px;">Secure Payment</h3>
-        
-        <form id="payment_form">
-            <div class="field-group">
-                <label for="eway-secure-field-name">Card Name</label>
-                <div id="eway-secure-field-name" class="secure-field-container"></div>
-                <div id="name-error" class="error-message" style="display: none;">Please enter a valid card name.</div>
-            </div>
-            <div class="field-group">
-                <label for="eway-secure-field-card">Card Number</label>
-                <div id="eway-secure-field-card" class="secure-field-container"></div>
-                <div id="card-error" class="error-message" style="display: none;">Please enter a valid card number.</div>
-            </div>
-            <div class="field-group">
-                <label for="eway-secure-field-expiry">Card Expiry</label>
-                <div id="eway-secure-field-expiry" class="secure-field-container"></div>
-                <div id="expiry-error" class="error-message" style="display: none;">Please select a valid expiry date.</div>
-            </div>
-            <div class="field-group">
-                <label for="eway-secure-field-cvn">Card CVN</label>
-                <div id="eway-secure-field-cvn" class="secure-field-container"></div>
-                <div id="cvn-error" class="error-message" style="display: none;">Please enter a valid CVN.</div>
-            </div>
-
-            <input type="hidden" id="securefieldcode" name="SecuredCardData" value="" />
-            <button type="button" id="payButton">Process Payment</button>
-        </form>
-    </div>
-
     <script>
-        var publicApiKey = "epk-5C485602-B8B0-4855-8B73-B27BD5E9DA09";
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const accessCode = urlParams.get('AccessCode');
+            const isSuccess = urlParams.get('i') === 'true';
 
-        var fieldStyles = "height: 40px !important; border: none !important; color: #000; background: transparent; font-size: 16px; outline: none !important; box-shadow: none !important; padding: 10px;";
-
-        var nameFieldConfig = {
-            publicApiKey: publicApiKey,
-            fieldDivId: "eway-secure-field-name",
-            fieldType: "name",
-            styles: fieldStyles
-        };
-        var cardFieldConfig = {
-            publicApiKey: publicApiKey,
-            fieldDivId: "eway-secure-field-card",
-            fieldType: "card",
-            styles: fieldStyles
-        };
-        var expiryFieldConfig = {
-            publicApiKey: publicApiKey,
-            fieldDivId: "eway-secure-field-expiry",
-            fieldType: "expiry",
-            styles: fieldStyles
-        };
-        var cvnFieldConfig = {
-            publicApiKey: publicApiKey,
-            fieldDivId: "eway-secure-field-cvn",
-            fieldType: "cvn",
-            styles: fieldStyles
-        };
-
-        var fieldValidity = {
-            name: false,
-            card: false,
-            expiry: false,
-            cvn: false
-        };
-
-        var secureFieldCode = null;
-
-        function secureFieldCallback(event) {
-            if (!event.fieldValid) {
-                console.error("Error in field:", event.targetField, event.errors);
-            } else {
-                document.getElementById(event.targetField + '-error').style.display = 'none';
-                fieldValidity[event.targetField] = event.valueIsValid;
-                secureFieldCode = event.secureFieldCode;
+            if (!accessCode) {
+                document.getElementById("message").innerText = "The operation was cancelled.";
+                document.getElementById("closeMessage").innerText = "You can now close this page.";
+                document.getElementById("loadingImage").style.display = 'none';
+                return;
             }
 
-            if (!event.valueIsValid) {
-                document.getElementById(event.targetField + '-error').style.display = 'block';
-            }
-        }
+            const endpoint = isSuccess 
+                ? `https://personal-uiba6aqx.outsystemscloud.com/paymentsController/rest/feedbackapi/?AccessCode=${accessCode}`
+                : `https://personal-uiba6aqx.outsystemscloud.com/paymentsController/rest/feedbackapi/cancel?AccessCode=${accessCode}`;
 
-        window.onload = function () {
-            eWAY.setupSecureField(nameFieldConfig, secureFieldCallback);
-            eWAY.setupSecureField(cardFieldConfig, secureFieldCallback);
-            eWAY.setupSecureField(expiryFieldConfig, secureFieldCallback);
-            eWAY.setupSecureField(cvnFieldConfig, secureFieldCallback);
-        };
+            fetch(endpoint)
+                .then(response => response.json())
+                .then(data => {
+                    const message = isSuccess ? "Payment Succeeded" : "The operation was cancelled.";
+                    document.getElementById("message").innerText = message;
+                    document.getElementById("closeMessage").innerText = "You can now close this page.";
 
-        document.getElementById("payButton").addEventListener("click", function () {
-            var nameValid = fieldValidity['name'];
-            var cardValid = fieldValidity['card'];
-            var expiryValid = fieldValidity['expiry'];
-            var cvnValid = fieldValidity['cvn'];
-
-            if (nameValid && cardValid && expiryValid && cvnValid) {
-                console.log(secureFieldCode);
-            } else {
-                console.error("Please fill out all fields correctly before processing the payment.");
-            }
+                    document.getElementById("loadingImage").style.display = 'none';
+                })
+                .catch(error => {
+                    document.getElementById("message").innerText = "Error: There was an issue with the request.";
+                    document.getElementById("closeMessage").innerText = "You can now close this page.";
+                    document.getElementById("loadingImage").style.display = 'none';
+                });
         });
     </script>
-
+</head>
+<body>
+    <div class="container">
+        <img id="loadingImage" class="loading" src="https://raw.githubusercontent.com/ksawalha/ksawalha.github.io/4beea65d1085a8b8e80760d6714b1368aeba7fc9/Rolling.svg" alt="Loading...">
+        <h1 id="message">Loading...</h1>
+        <p id="closeMessage"></p>
+    </div>
 </body>
 </html>
