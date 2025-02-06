@@ -41,17 +41,17 @@
         document.addEventListener("DOMContentLoaded", function() {
             const urlParams = new URLSearchParams(window.location.search);
             const accessCode = urlParams.get('AccessCode');
-            const isSuccess = urlParams.get('i') === 'True';
+            const isSuccess = urlParams.get('i') === 'true';
 
-            if (!AccessCode) {
-                document.getElementById("message").innerText = "The operation was cancelled.";
+            if (!accessCode) {
+                document.getElementById("message").innerText = "Error: AccessCode is required.";
                 document.getElementById("closeMessage").innerText = "You can now close this page.";
                 document.getElementById("loadingImage").style.display = 'none';
                 return;
             }
 
             const endpoint = isSuccess 
-                ? `https://personal-uiba6aqx.outsystemscloud.com/paymentsController/rest/feedbackapi/tran?AccessCode=${accessCode}`
+                ? `https://personal-uiba6aqx.outsystemscloud.com/paymentsController/rest/feedbackapi/?AccessCode=${accessCode}`
                 : `https://personal-uiba6aqx.outsystemscloud.com/paymentsController/rest/feedbackapi/cancel?AccessCode=${accessCode}`;
 
             fetch(endpoint)
@@ -63,8 +63,7 @@
                     document.getElementById("loadingImage").style.display = 'none';
                 })
                 .catch(error => {
-                    const message = isSuccess ? "Payment Succeeded" : "The operation was cancelled.";
-                    document.getElementById("message").innerText = message;
+                    document.getElementById("message").innerText = "Error: There was an issue with the request.";
                     document.getElementById("closeMessage").innerText = "You can now close this page.";
                     document.getElementById("loadingImage").style.display = 'none';
                 });
