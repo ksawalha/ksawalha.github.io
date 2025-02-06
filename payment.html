@@ -41,7 +41,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             const urlParams = new URLSearchParams(window.location.search);
             const accessCode = urlParams.get('AccessCode');
-            const isSuccess = urlParams.get('i') === 'true';
+            const isSuccess = urlParams.get('i') === 'True';
 
             if (!accessCode) {
                 document.getElementById("message").innerText = "The operation was cancelled.";
