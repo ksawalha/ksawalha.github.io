@@ -41,7 +41,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             const urlParams = new URLSearchParams(window.location.search);
             const accessCode = urlParams.get('AccessCode');
-            const isSuccess = urlParams.get('i') === 'true';
+            const isSuccess = urlParams.get('i') === 'True' || urlParams.get('i') === 'true';
 
             if (!accessCode) {
                 document.getElementById("message").innerText = "Error: AccessCode is required.";
