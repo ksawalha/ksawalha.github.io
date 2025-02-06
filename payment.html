@@ -51,7 +51,7 @@
             }
 
             const endpoint = isSuccess 
-                ? `https://personal-uiba6aqx.outsystemscloud.com/paymentsController/rest/feedbackapi/?AccessCode=${accessCode}`
+                ? `https://personal-uiba6aqx.outsystemscloud.com/paymentsController/rest/feedbackapi/tran?AccessCode=${accessCode}`
                 : `https://personal-uiba6aqx.outsystemscloud.com/paymentsController/rest/feedbackapi/cancel?AccessCode=${accessCode}`;
 
             fetch(endpoint)
@@ -60,11 +60,11 @@
                     const message = isSuccess ? "Payment Succeeded" : "The operation was cancelled.";
                     document.getElementById("message").innerText = message;
                     document.getElementById("closeMessage").innerText = "You can now close this page.";
-
                     document.getElementById("loadingImage").style.display = 'none';
                 })
                 .catch(error => {
-                    document.getElementById("message").innerText = "Error: There was an issue with the request.";
+                    const message = isSuccess ? "Payment Succeeded" : "The operation was cancelled.";
+                    document.getElementById("message").innerText = message;
                     document.getElementById("closeMessage").innerText = "You can now close this page.";
                     document.getElementById("loadingImage").style.display = 'none';
                 });
